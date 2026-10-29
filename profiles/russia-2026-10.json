@@ -1,0 +1,24 @@
+{
+  "name": "russia-2026-10",
+  "description": "Model of reported Russian behaviours as of 2026-10: QUIC Initial SNI filtering with residual blocking, banned hosting prefixes, a TCP byte cutoff behind some CDNs, UDP DNS hijack.",
+  "reviewed": "2026-10-28",
+  "dpi": "strict",
+  "placements": [
+    {"name": "clean", "ip": "203.0.113.10"},
+    {"name": "banned-hosting", "ip": "198.51.100.10"},
+    {"name": "cdn", "ip": "198.18.0.10"}
+  ],
+  "rules": [
+    {"id": "RU-IP-1", "source": "https://github.com/net4people/bbs/issues/671", "confidence": "reported",
+     "note": "198.51.100.0/24 stands for a mass-banned hosting prefix.",
+     "match": {"prefixes": ["198.51.100.0/24"]}, "action": {"type": "drop"}},
+    {"id": "RU-TCP-1", "source": "https://github.com/net4people/bbs/issues/662", "confidence": "reported",
+     "note": "connection freezes after about 16-20 KB, no RST; 198.18.0.0/15 stands for non-whitelisted sites behind CDNs. Not applied 24/7 in reality.",
+     "match": {"proto": "tcp", "prefixes": ["198.18.0.0/15"], "after_bytes": 16384}, "action": {"type": "drop"}},
+    {"id": "RU-QUIC-1", "source": "https://github.com/net4people/bbs/issues/654", "confidence": "derived",
+     "note": "QUIC v1 Initial SNI on any UDP port, 420 s residual block per 4-tuple; node.lab.example stands for a blocklisted name.",
+     "match": {"proto": "udp", "class": ["quic"], "sni": ["node.lab.example"]}, "action": {"type": "drop", "ttl_s": 420, "key": "4tuple"}},
+    {"id": "RU-DNS-1", "source": "https://github.com/net4people/bbs/issues/657", "confidence": "observed",
+     "match": {"proto": "udp", "ports": [53], "dns": ["youtube.com", "whatsapp.com"]}, "action": {"type": "inject-dns", "rcode": 3}}
+  ]
+}

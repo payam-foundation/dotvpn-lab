@@ -1,0 +1,20 @@
+{
+  "name": "iran-icmp-2026-10",
+  "description": "Packet-level Iranian ICMP behaviours from one datacenter-route measurement (#676). Thresholds are lab parameters; the report says so. Only meaningful in the netns lab.",
+  "reviewed": "2026-10-28",
+  "placements": [{"name": "abroad", "ip": "203.0.113.10"}],
+  "rules": [
+    {"id": "IR-4", "source": "https://github.com/net4people/bbs/issues/676", "confidence": "observed",
+     "note": "echo requests Iran to abroad dropped, abroad to Iran fine; other ICMP types pass.",
+     "match": {"proto": "icmp", "dir": "egress", "icmp_type": [8]}, "action": {"type": "drop"}},
+    {"id": "IR-5", "source": "https://github.com/net4people/bbs/issues/676", "confidence": "observed",
+     "note": "payloads above about 640 B dropped (8-byte ICMP header included in min_len).",
+     "match": {"proto": "icmp", "min_len": 649}, "action": {"type": "drop"}},
+    {"id": "IR-3", "source": "https://github.com/net4people/bbs/issues/676", "confidence": "observed",
+     "note": "sustained volume triggers a block of the pair for a while. Real trigger is about 30 MB/s for a few seconds; the lab uses packets per second and a short block. Parameters, not truths.",
+     "match": {"proto": "icmp", "rate_pps": 600, "for_sec": 2}, "action": {"type": "drop", "ttl_s": 6}},
+    {"id": "IR-2", "source": "https://github.com/net4people/bbs/issues/676", "confidence": "observed",
+     "note": "abroad-to-Iran direction capped at about 50-55k ICMP pps. Absolute rate depends on the host, so the lab parameter is much lower.",
+     "match": {"proto": "icmp", "dir": "ingress"}, "action": {"type": "throttle", "rate_pps": 300}}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "iran-2026-10",
+  "description": "Model of the Iranian behaviours with a published method as of 2026-10: CDN SNI filtering and reassembling DPI. ICMP-only mechanisms (IR-2..IR-5) are packet-level and live in the netns profile.",
+  "reviewed": "2026-10-28",
+  "dpi": "strict",
+  "placements": [{"name": "abroad", "ip": "203.0.113.10"}],
+  "rules": [
+    {"id": "IR-6", "source": "https://github.com/net4people/bbs/issues/676", "confidence": "observed",
+     "note": "wss to Cloudflare without ECH failed after the TLS handshake; lab name cdn.lab.example stands for the CDN host. Action (drop vs rst) is not stated by the source.",
+     "match": {"proto": "tcp", "sni": ["cdn.lab.example"]}, "action": {"type": "drop"}},
+    {"id": "IR-7", "source": "https://github.com/net4people/bbs/issues/640", "confidence": "reported",
+     "note": "single reporter; fragmented ClientHellos dropped since about 2026-07-27.",
+     "match": {"proto": "tcp", "fragmented_hello": true}, "action": {"type": "drop"}}
+  ]
+}

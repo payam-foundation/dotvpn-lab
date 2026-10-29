@@ -1,0 +1,16 @@
+{
+  "name": "iran-allowlist",
+  "description": "iran-2026-10 plus a generic border allowlist (TCP 53/80/443 and UDP 53 only) and DNS injection. Both additions are assumptions to make a stricter profile runnable.",
+  "reviewed": "2026-10-28",
+  "extends": "iran-2026-10",
+  "rules": [
+    {"id": "IR-A2", "source": "assumed, modelled on RU-DNS-1", "confidence": "assumed",
+     "match": {"proto": "udp", "ports": [53], "dns": ["youtube.com", "instagram.com"]}, "action": {"type": "inject-dns", "rcode": 3}},
+    {"id": "IR-A1-pass-tcp", "source": "assumed generic whitelist model", "confidence": "assumed",
+     "match": {"proto": "tcp", "ports": [53, 80, 443]}, "action": {"type": "pass"}},
+    {"id": "IR-A1-pass-dns", "source": "assumed generic whitelist model", "confidence": "assumed",
+     "match": {"proto": "udp", "ports": [53]}, "action": {"type": "pass"}},
+    {"id": "IR-A1", "source": "assumed generic whitelist model", "confidence": "assumed",
+     "match": {}, "action": {"type": "drop"}}
+  ]
+}

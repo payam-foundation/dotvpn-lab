@@ -1,0 +1,253 @@
+{
+  "note": "Expected verdicts per profile/placement/carrier. A change in either direction fails the matrix test. Regenerate with LAB_UPDATE=1 after reviewing the diff; reasons are kept by hand.",
+  "expected": {
+    "baseline-pass/clean/cdnws": {
+      "verdict": "works"
+    },
+    "baseline-pass/clean/dns": {
+      "verdict": "works"
+    },
+    "baseline-pass/clean/h2": {
+      "verdict": "works"
+    },
+    "baseline-pass/clean/h3": {
+      "verdict": "works"
+    },
+    "baseline-pass/clean/ladder": {
+      "verdict": "works",
+      "landed": "h3"
+    },
+    "baseline-pass/clean/reverse": {
+      "verdict": "works"
+    },
+    "baseline-pass/clean/webtunnel": {
+      "verdict": "works"
+    },
+    "china-reference/abroad/cdnws": {
+      "verdict": "works"
+    },
+    "china-reference/abroad/dns": {
+      "verdict": "works"
+    },
+    "china-reference/abroad/h2": {
+      "verdict": "works"
+    },
+    "china-reference/abroad/h3": {
+      "verdict": "works"
+    },
+    "china-reference/abroad/ladder": {
+      "verdict": "works",
+      "landed": "h3"
+    },
+    "china-reference/abroad/reverse": {
+      "verdict": "works"
+    },
+    "china-reference/abroad/webtunnel": {
+      "verdict": "works"
+    },
+    "iran-2026-10/abroad/cdnws": {
+      "verdict": "hangs",
+      "reason": "CDN SNI blocked (IR-6): silent drop, so the dial hangs until its timeout"
+    },
+    "iran-2026-10/abroad/dns": {
+      "verdict": "works"
+    },
+    "iran-2026-10/abroad/h2": {
+      "verdict": "works"
+    },
+    "iran-2026-10/abroad/h3": {
+      "verdict": "works"
+    },
+    "iran-2026-10/abroad/ladder": {
+      "verdict": "works",
+      "landed": "h3"
+    },
+    "iran-2026-10/abroad/reverse": {
+      "verdict": "works"
+    },
+    "iran-2026-10/abroad/webtunnel": {
+      "verdict": "works"
+    },
+    "iran-allowlist/abroad/cdnws": {
+      "verdict": "works"
+    },
+    "iran-allowlist/abroad/dns": {
+      "verdict": "works"
+    },
+    "iran-allowlist/abroad/h2": {
+      "verdict": "works"
+    },
+    "iran-allowlist/abroad/h3": {
+      "verdict": "hangs",
+      "reason": "default-deny allowlist (assumed IR-A1): UDP/443 dropped, h3 hangs, ladder falls back to h2"
+    },
+    "iran-allowlist/abroad/ladder": {
+      "verdict": "works",
+      "landed": "h2",
+      "reason": "default-deny allowlist (assumed IR-A1): UDP/443 dropped, h3 hangs, ladder falls back to h2"
+    },
+    "iran-allowlist/abroad/reverse": {
+      "verdict": "works"
+    },
+    "iran-allowlist/abroad/webtunnel": {
+      "verdict": "works"
+    },
+    "iran-partition/abroad/cdnws": {
+      "verdict": "hangs",
+      "reason": "partition (IR-1): everything but ICMP dropped, all carriers hang, nothing to fall back to"
+    },
+    "iran-partition/abroad/dns": {
+      "verdict": "hangs",
+      "reason": "partition (IR-1): everything but ICMP dropped, all carriers hang, nothing to fall back to"
+    },
+    "iran-partition/abroad/h2": {
+      "verdict": "hangs",
+      "reason": "partition (IR-1): everything but ICMP dropped, all carriers hang, nothing to fall back to"
+    },
+    "iran-partition/abroad/h3": {
+      "verdict": "hangs",
+      "reason": "partition (IR-1): everything but ICMP dropped, all carriers hang, nothing to fall back to"
+    },
+    "iran-partition/abroad/ladder": {
+      "verdict": "hangs",
+      "reason": "partition (IR-1): everything but ICMP dropped, all carriers hang, nothing to fall back to"
+    },
+    "iran-partition/abroad/reverse": {
+      "verdict": "hangs",
+      "reason": "partition (IR-1): everything but ICMP dropped, all carriers hang, nothing to fall back to"
+    },
+    "iran-partition/abroad/webtunnel": {
+      "verdict": "hangs",
+      "reason": "partition (IR-1): everything but ICMP dropped, all carriers hang, nothing to fall back to"
+    },
+    "russia-2026-10/banned-hosting/cdnws": {
+      "verdict": "hangs",
+      "reason": "banned hosting prefix (RU-IP-1): all traffic to the IP dropped"
+    },
+    "russia-2026-10/banned-hosting/dns": {
+      "verdict": "hangs",
+      "reason": "banned hosting prefix (RU-IP-1): all traffic to the IP dropped"
+    },
+    "russia-2026-10/banned-hosting/h2": {
+      "verdict": "hangs",
+      "reason": "banned hosting prefix (RU-IP-1): all traffic to the IP dropped"
+    },
+    "russia-2026-10/banned-hosting/h3": {
+      "verdict": "hangs",
+      "reason": "banned hosting prefix (RU-IP-1): all traffic to the IP dropped"
+    },
+    "russia-2026-10/banned-hosting/ladder": {
+      "verdict": "hangs",
+      "reason": "banned hosting prefix (RU-IP-1): all traffic to the IP dropped"
+    },
+    "russia-2026-10/banned-hosting/reverse": {
+      "verdict": "hangs",
+      "reason": "banned hosting prefix (RU-IP-1): all traffic to the IP dropped"
+    },
+    "russia-2026-10/banned-hosting/webtunnel": {
+      "verdict": "hangs",
+      "reason": "banned hosting prefix (RU-IP-1): all traffic to the IP dropped"
+    },
+    "russia-2026-10/cdn/cdnws": {
+      "verdict": "hangs",
+      "reason": "TCP freeze after 16 KB behind a CDN prefix (RU-TCP-1): bulk body stalls, no RST"
+    },
+    "russia-2026-10/cdn/dns": {
+      "verdict": "works"
+    },
+    "russia-2026-10/cdn/h2": {
+      "verdict": "hangs",
+      "reason": "TCP freeze after 16 KB behind a CDN prefix (RU-TCP-1): bulk body stalls, no RST"
+    },
+    "russia-2026-10/cdn/h3": {
+      "verdict": "works",
+      "reason": "QUIC v2 (wire v0.2.0) evades the v1-only Initial SNI filter (RU-QUIC-1): h3 works, ladder lands on h3"
+    },
+    "russia-2026-10/cdn/ladder": {
+      "verdict": "works",
+      "landed": "h3"
+    },
+    "russia-2026-10/cdn/reverse": {
+      "verdict": "hangs",
+      "reason": "TCP freeze after 16 KB behind a CDN prefix (RU-TCP-1): bulk body stalls, no RST"
+    },
+    "russia-2026-10/cdn/webtunnel": {
+      "verdict": "hangs",
+      "reason": "TCP freeze after 16 KB behind a CDN prefix (RU-TCP-1): bulk body stalls, no RST"
+    },
+    "russia-2026-10/clean/cdnws": {
+      "verdict": "works"
+    },
+    "russia-2026-10/clean/dns": {
+      "verdict": "works"
+    },
+    "russia-2026-10/clean/h2": {
+      "verdict": "works"
+    },
+    "russia-2026-10/clean/h3": {
+      "verdict": "works",
+      "reason": "QUIC v2 (wire v0.2.0) evades the v1-only Initial SNI filter (RU-QUIC-1): h3 works, ladder lands on h3"
+    },
+    "russia-2026-10/clean/ladder": {
+      "verdict": "works",
+      "landed": "h3",
+      "reason": "QUIC v2 (wire v0.2.0) evades the v1-only Initial SNI filter (RU-QUIC-1): h3 works, ladder lands on h3"
+    },
+    "russia-2026-10/clean/reverse": {
+      "verdict": "works"
+    },
+    "russia-2026-10/clean/webtunnel": {
+      "verdict": "works"
+    },
+    "russia-mobile-whitelist/allowlisted/cdnws": {
+      "verdict": "works"
+    },
+    "russia-mobile-whitelist/allowlisted/dns": {
+      "verdict": "works"
+    },
+    "russia-mobile-whitelist/allowlisted/h2": {
+      "verdict": "works"
+    },
+    "russia-mobile-whitelist/allowlisted/h3": {
+      "verdict": "works"
+    },
+    "russia-mobile-whitelist/allowlisted/ladder": {
+      "verdict": "works",
+      "landed": "h3"
+    },
+    "russia-mobile-whitelist/allowlisted/reverse": {
+      "verdict": "works"
+    },
+    "russia-mobile-whitelist/allowlisted/webtunnel": {
+      "verdict": "works"
+    },
+    "russia-mobile-whitelist/outside/cdnws": {
+      "verdict": "hangs",
+      "reason": "whitelist default-deny (RU-WL-1): destination not allowlisted"
+    },
+    "russia-mobile-whitelist/outside/dns": {
+      "verdict": "hangs",
+      "reason": "whitelist default-deny (RU-WL-1): destination not allowlisted"
+    },
+    "russia-mobile-whitelist/outside/h2": {
+      "verdict": "hangs",
+      "reason": "whitelist default-deny (RU-WL-1): destination not allowlisted"
+    },
+    "russia-mobile-whitelist/outside/h3": {
+      "verdict": "hangs",
+      "reason": "whitelist default-deny (RU-WL-1): destination not allowlisted"
+    },
+    "russia-mobile-whitelist/outside/ladder": {
+      "verdict": "hangs",
+      "reason": "whitelist default-deny (RU-WL-1): destination not allowlisted"
+    },
+    "russia-mobile-whitelist/outside/reverse": {
+      "verdict": "hangs",
+      "reason": "whitelist default-deny (RU-WL-1): destination not allowlisted"
+    },
+    "russia-mobile-whitelist/outside/webtunnel": {
+      "verdict": "hangs",
+      "reason": "whitelist default-deny (RU-WL-1): destination not allowlisted"
+    }
+  }
+}

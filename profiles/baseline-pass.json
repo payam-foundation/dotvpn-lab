@@ -1,0 +1,6 @@
+{
+  "name": "baseline-pass",
+  "description": "Control: passes everything. Every matrix is read against this row.",
+  "reviewed": "2026-10-28",
+  "rules": []
+}

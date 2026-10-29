@@ -1,0 +1,6 @@
+{
+  "h2": {"mbps": 700, "latency_us": 450},
+  "h3": {"mbps": 950, "latency_us": 430},
+  "cdnws": {"mbps": 1150, "latency_us": 330},
+  "webtunnel": {"mbps": 1250, "latency_us": 310}
+}

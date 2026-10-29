@@ -1,0 +1,11 @@
+{
+  "name": "china-reference",
+  "description": "Reference only: GFW fully-encrypted-traffic heuristic. Used to check that our first packets are exempt (TLS), not to model a Russian or Iranian behaviour.",
+  "reviewed": "2026-10-28",
+  "placements": [{"name": "abroad", "ip": "203.0.113.10"}],
+  "rules": [
+    {"id": "CN-ENT-1", "source": "https://www.usenix.org/conference/usenixsecurity23/presentation/wu-mingshi", "confidence": "derived",
+     "note": "Algorithm 1 exemptions Ex1-Ex5; real blocking is probabilistic and subnet-limited, the lab blocks always.",
+     "match": {"proto": "tcp", "entropy": true}, "action": {"type": "drop"}}
+  ]
+}

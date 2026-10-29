@@ -1,0 +1,6 @@
+/dist/
+*.test
+*.out
+.env
+*.key
+/out/

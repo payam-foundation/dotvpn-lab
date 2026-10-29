@@ -1,0 +1,16 @@
+{
+  "name": "russia-mobile-whitelist",
+  "description": "Mobile operator whitelist: default deny except an allowlisted prefix. Mechanism only; real lists differ per operator, base station and day.",
+  "reviewed": "2026-10-28",
+  "placements": [
+    {"name": "outside", "ip": "203.0.113.10"},
+    {"name": "allowlisted", "ip": "192.0.2.10"}
+  ],
+  "rules": [
+    {"id": "RU-WL-1-allow", "source": "https://github.com/net4people/bbs/issues/650", "confidence": "reported",
+     "note": "192.0.2.0/24 stands for an allowlisted prefix.",
+     "match": {"prefixes": ["192.0.2.0/24"]}, "action": {"type": "pass"}},
+    {"id": "RU-WL-1", "source": "https://github.com/net4people/bbs/issues/650", "confidence": "reported",
+     "match": {}, "action": {"type": "drop"}}
+  ]
+}

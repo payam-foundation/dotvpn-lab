@@ -1,0 +1,11 @@
+{
+  "name": "iran-partition",
+  "description": "Severe variant: only ICMP crosses the border (IR-1). Userspace carriers carry no ICMP, so every carrier is cut. Expected: all fail; the matrix shows hang versus fail-fast.",
+  "reviewed": "2026-10-28",
+  "placements": [{"name": "abroad", "ip": "203.0.113.10"}],
+  "rules": [
+    {"id": "IR-1", "source": "https://github.com/net4people/bbs/issues/676", "confidence": "observed",
+     "note": "TCP, UDP, GRE, IPIP, SCTP, ESP cut after a few packets on measured datacenter routes. Silent drop.",
+     "match": {}, "action": {"type": "drop"}}
+  ]
+}

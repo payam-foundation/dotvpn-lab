@@ -1,0 +1,132 @@
+name: lab
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Component repos call this on their PRs: gh workflow run lab -R payam-foundation/dotvpn-lab
+  # -f wire_ref=... -f core_ref=... -f relay_ref=... -f client_ref=...
+  workflow_dispatch:
+    inputs:
+      wire_ref: {description: dotvpn-wire ref, default: main}
+      core_ref: {description: dotvpn-core ref, default: main}
+      relay_ref: {description: dotvpn-relay ref, default: main}
+      client_ref: {description: dotvpn-client ref, default: main}
+  repository_dispatch:
+    types: [component-changed]
+  schedule:
+    - cron: "17 3 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # go.mod points at siblings (../dotvpn-core and so on). Refs come from
+  # workflow_dispatch inputs or the repository_dispatch client_payload, else main.
+  WIRE_REF: ${{ inputs.wire_ref || github.event.client_payload.wire_ref || 'main' }}
+  CORE_REF: ${{ inputs.core_ref || github.event.client_payload.core_ref || 'main' }}
+  RELAY_REF: ${{ inputs.relay_ref || github.event.client_payload.relay_ref || 'main' }}
+  CLIENT_REF: ${{ inputs.client_ref || github.event.client_payload.client_ref || 'main' }}
+
+jobs:
+  userspace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          path: dotvpn-lab
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: {repository: payam-foundation/dotvpn-wire, ref: "${{ env.WIRE_REF }}", path: dotvpn-wire, persist-credentials: false}
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: {repository: payam-foundation/dotvpn-core, ref: "${{ env.CORE_REF }}", path: dotvpn-core, persist-credentials: false}
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: {repository: payam-foundation/dotvpn-relay, ref: "${{ env.RELAY_REF }}", path: dotvpn-relay, persist-credentials: false}
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: {repository: payam-foundation/dotvpn-client, ref: "${{ env.CLIENT_REF }}", path: dotvpn-client, persist-credentials: false}
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version-file: dotvpn-lab/go.mod
+      - working-directory: dotvpn-lab
+        # Userspace suites, any OS. The matrix cells diff against
+        # profiles/baseline.json inside suites/matrix; a changed verdict fails.
+        # PRs and pushes skip Snowflake/WebRTC (-short); the nightly schedule and
+        # manual dispatch run everything.
+        run: |
+          short=""; [ "${{ github.event_name }}" = pull_request ] || [ "${{ github.event_name }}" = push ] && short="-short"
+          go vet ./... && go test -race -count=1 $short -timeout 15m -v ./...
+
+  # Packet-level suites: netns, nftables, tc netem, NFQUEUE, TUN leak checks.
+  # If the runner kernel lacks a feature the suite skips with a reason, and the
+  # skip shows in the log; the userspace matrix above still gates.
+  lab-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      LAB_OUT: out
+      LAB_PERF: ${{ github.event_name == 'schedule' && '1' || '' }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          path: dotvpn-lab
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: {repository: payam-foundation/dotvpn-wire, ref: "${{ env.WIRE_REF }}", path: dotvpn-wire, persist-credentials: false}
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: {repository: payam-foundation/dotvpn-core, ref: "${{ env.CORE_REF }}", path: dotvpn-core, persist-credentials: false}
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: {repository: payam-foundation/dotvpn-relay, ref: "${{ env.RELAY_REF }}", path: dotvpn-relay, persist-credentials: false}
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: {repository: payam-foundation/dotvpn-client, ref: "${{ env.CLIENT_REF }}", path: dotvpn-client, persist-credentials: false}
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version-file: dotvpn-lab/go.mod
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends nftables iproute2 iptables iperf3 tcpdump
+      - name: build lab binaries and tests
+        working-directory: dotvpn-lab
+        run: |
+          mkdir -p out/bin
+          export CGO_ENABLED=0
+          (cd ../dotvpn-core && go build -trimpath -tags e2e -o ../dotvpn-lab/out/bin/core-e2e ./cmd/dotvpn-core)
+          (cd ../dotvpn-core && go build -trimpath -o ../dotvpn-lab/out/bin/core ./cmd/dotvpn-core)
+          (cd ../dotvpn-relay && go build -trimpath -o ../dotvpn-lab/out/bin/relay ./cmd/dotvpn-relay)
+          (cd ../dotvpn-client && go build -trimpath -o ../dotvpn-lab/out/bin/dotvpn ./cmd/dotvpn)
+          go build -trimpath -o out/bin/labtool ./cmd/labtool
+      - name: packet-level suites (root)
+        working-directory: dotvpn-lab
+        # sudo -E keeps LAB_* and PATH; -p lets go test run packages serially
+        # (-p 1) because they share the kernel's netns and iptables state.
+        run: |
+          sudo -E env "PATH=$PATH" LAB_BINS="$PWD/out/bin" \
+            go test -tags lab -race -count=1 -p 1 -timeout 30m -v ./suites/... 2>&1 | tee out/lab.log
+      - name: render matrix and diff against baseline
+        if: always()
+        working-directory: dotvpn-lab
+        run: |
+          test -f out/matrix.json || exit 0
+          go run ./cmd/lab report -matrix out/matrix.json -baseline profiles/baseline.json -md out/matrix.md
+      - name: leftover namespaces
+        if: always()
+        working-directory: dotvpn-lab
+        run: sudo make lab-clean
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: lab-out
+          path: dotvpn-lab/out/*.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: lab-report
+          path: |
+            dotvpn-lab/out/matrix.md
+            dotvpn-lab/out/lab.log
+          if-no-files-found: ignore
+          retention-days: 30
