@@ -539,6 +539,11 @@ node:
 				break
 			}
 		}
+		// A client that arrives before the node parks is closed by the relay,
+		// and the DNS carrier (KCP, no FIN) only notices at the handshake
+		// timeout. Give the tunnel a moment; a censor that blocks it just costs 5s.
+		for end := time.Now().Add(5 * time.Second); time.Now().Before(end) && s.Parked(t) < 1; time.Sleep(100 * time.Millisecond) {
+		}
 	} else {
 		WaitFor(t, 40*time.Second, "node tunnel parked at relay", func() bool { return s.Parked(t) >= 1 })
 	}
