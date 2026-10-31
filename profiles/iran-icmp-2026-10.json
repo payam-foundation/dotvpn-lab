@@ -11,8 +11,8 @@
      "note": "payloads above about 640 B dropped (8-byte ICMP header included in min_len).",
      "match": {"proto": "icmp", "min_len": 649}, "action": {"type": "drop"}},
     {"id": "IR-3", "source": "https://github.com/net4people/bbs/issues/676", "confidence": "observed",
-     "note": "sustained volume triggers a block of the pair for a while. Real trigger is about 30 MB/s for a few seconds; the lab uses packets per second and a short block. Parameters, not truths.",
-     "match": {"proto": "icmp", "rate_pps": 600, "for_sec": 2}, "action": {"type": "drop", "ttl_s": 6}},
+     "note": "sustained volume triggers a block of the pair for a while. Real trigger is about 30 MB/s for a few seconds; the lab uses packets per second and a short block. The lab rate sits below the IR-2 throttle so a flood can always reach it. Parameters, not truths.",
+     "match": {"proto": "icmp", "rate_pps": 150, "for_sec": 2}, "action": {"type": "drop", "ttl_s": 6}},
     {"id": "IR-2", "source": "https://github.com/net4people/bbs/issues/676", "confidence": "observed",
      "note": "abroad-to-Iran direction capped at about 50-55k ICMP pps. Absolute rate depends on the host, so the lab parameter is much lower.",
      "match": {"proto": "icmp", "dir": "ingress"}, "action": {"type": "throttle", "rate_pps": 300}}
