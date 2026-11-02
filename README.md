@@ -24,20 +24,28 @@ Design: [ADR-016](docs/adr/016-censorship-lab.md).
 
 ```mermaid
 flowchart LR
-    client["Client"]
-    censor["Censor middlebox"]
-    relay["Relay (in-country)"]
-    core["Core node"]
-    decoy["Decoy site"]
-    internet["Internet origin"]
+    subgraph inside ["inside: the country"]
+        client["Client"]
+        relay["Relay"]
+    end
+    subgraph border ["border"]
+        censor{"Censor profile<br/>userspace proxy or nft, netem, NFQUEUE"}
+    end
+    subgraph outside ["outside: abroad"]
+        core["Core node"]
+        origin(["Origin / CDN"])
+    end
 
-    client -->|"via relay"| censor
-    censor --> relay
-    core -->|"reverse tunnel, node dials out"| relay
-    client -.->|"direct carriers, same censor"| censor
-    censor -.-> core
-    relay -.->|"non-dotvpn visitors"| decoy
-    core --> internet
+    client -->|"every carrier"| censor
+    censor -->|"direct, if allowed"| core
+    censor -->|"knock + frames"| relay
+    core -.->|"reverse tunnel, dialed out through the censor"| censor
+    core -->|"egress"| origin
+
+    classDef focal fill:#fdf0ea,stroke:#eb6c36,color:#2d3142
+    classDef ext fill:#f5f5f5,stroke:#7a8399,stroke-dasharray:4 3,color:#2d3142
+    class censor focal
+    class origin ext
 ```
 
 The relay sits on the censored side, so the reverse tunnel crosses the censor too. The matrix shows which profiles block it.

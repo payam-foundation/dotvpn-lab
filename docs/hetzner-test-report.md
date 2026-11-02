@@ -259,3 +259,15 @@ Not verified live:
 - Relay path with the new client against the live host (relay container left on the old build; the lab covers the reverse path with UDP).
 - ECH with a distinct inner/outer name on a self-run front: only Cloudflare's ECH was exercised live; the split is lab-covered.
 - No in-country testing; `REPORT.md` "needs-validation" items stay open.
+
+## 2026-10-31: relay lowkey install live check
+
+Host `91.98.137.183`, Ubuntu 26.04 aarch64, existing `dotvpn-core` service and `relay-test` container left running. Installer: `dotvpn-relay/deploy/install.sh --lowkey` with the `neutral` artifact and nginx 1.30.6 as the operator decoy (ADR-016 in `dotvpn-relay`).
+
+- Install, enroll and start: service user, `/etc/<name>/config.yaml` (`root:<name>`, 0640) and unit created under the random name; self-audit passed (no forbidden token in created files, `ps`, `ss -tlnp`, `systemctl cat`, journald or binary strings). `systemd-analyze security` exposure 1.9.
+- Failed enrollment: rollback trap removed user, files and unit; nothing left behind.
+- Probe parity, relay port versus nginx direct: plain HTTP, garbage bytes, partial ClientHello, silent connect, TLS alert, HTTP/2 preface and SNI variants. 0 differences.
+- Upgrade, rollback and uninstall by `--name`: clean. Uninstall leaves firewall rules, as documented.
+- `dotvpn-core` and `relay-test` unaffected. `/root/install.sh` on the host is core's (dated Oct 28) and was not touched. Test files and containers removed afterwards.
+
+Not verified live: a relay-path session from a real client through the lowkey install (lab `suites/deploy/lowkey_test.go` covers it).
