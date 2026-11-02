@@ -558,8 +558,10 @@ func (s *Stack) Parked(t *testing.T) int {
 	}
 	defer resp.Body.Close()
 	b, _ := io.ReadAll(resp.Body)
+	// The metric is named after the relay binary (<prog>_parked), and the lab
+	// builds that binary as "relay".
 	for _, l := range strings.Split(string(b), "\n") {
-		if v, ok := strings.CutPrefix(l, "dotvpn_relay_parked "); ok {
+		if name, v, ok := strings.Cut(l, " "); ok && strings.HasSuffix(name, "_parked") {
 			n, _ := strconv.Atoi(strings.TrimSpace(v))
 			return n
 		}
