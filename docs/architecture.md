@@ -11,7 +11,7 @@ Six sibling folders. Each is a Go module and an independent git repo, and each k
 | `dotvpn-android` | app | Kotlin/Compose `VpnService` shell around `dotvpn-client/mobile` (gomobile AAR). Invite/QR import, split tunnel, Persian/English. |
 | `dotvpn-lab` | lab + tests | Three-component integration, censorship lab (middlebox, netns, active-probe, replay, timing). Formerly `dotvpn-e2e`. |
 
-Dependency rule: core, relay, client and lab depend on `dotvpn-wire` only (plus lab on the other three). `dotvpn-android` consumes `dotvpn-client/mobile` only. Locally each `go.mod` uses `replace github.com/payam-foundation/dotvpn-wire => ../dotvpn-wire`; drop it when wire is tagged and published.
+Dependency rule: core, relay, client and lab depend on `dotvpn-wire` only (plus lab on the other three). `dotvpn-android` consumes `dotvpn-client/mobile` only. Each `go.mod` pins a published wire tag; local side-by-side work uses an untracked `go.work` in the parent directory (see CONTRIBUTING.md).
 
 ```mermaid
 flowchart LR
