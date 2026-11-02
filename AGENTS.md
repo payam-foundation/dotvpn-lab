@@ -2,7 +2,7 @@
 
 Censorship lab and black-box tests. Module `github.com/payam-foundation/dotvpn-lab` (formerly `dotvpn-e2e`). Builds and runs core, relay and client against documented censor profiles. Mechanism checks only: a green matrix never means "works in Iran" or "works in Russia".
 
-Needs the six repos side by side. `replace` points at `../dotvpn-wire` and `../dotvpn-client`; core and relay are built as binaries by `harness.Main` (called from each suite's `TestMain`). Core is built with `-tags e2e` (loopback egress) plus an untagged build that proves the SSRF guard.
+Needs the six repos side by side. Local runs use an untracked `go.work` in the parent directory (see CONTRIBUTING.md) listing the sibling repos; core and relay are built as binaries by `harness.Main` (called from each suite's `TestMain`). Core is built with `-tags e2e` (loopback egress) plus an untagged build that proves the SSRF guard.
 
 ## Commands
 
@@ -31,3 +31,7 @@ make matrix && make report          # profile x carrier matrix, diff against pro
 ## Docs
 
 `docs/architecture.md`, `docs/REPORT.md` (security gate, needs-validation and not-covered lists), `docs/hetzner-test-report.md`, `docs/lab/`, `docs/adr/README.md` (index of every repo's ADRs).
+
+## Flow
+
+Pull requests only, never push to `main`. PR title is a Conventional Commit, commits are signed off (`git commit -s`), merges are squash-only. Releases come from release-please. See `CONTRIBUTING.md`.

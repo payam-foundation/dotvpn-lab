@@ -25,7 +25,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
-  # go.mod points at siblings (../dotvpn-core and so on). Refs come from
+  # CI builds a go.work over the sibling checkouts. Refs come from
   # workflow_dispatch inputs or the repository_dispatch client_payload, else main.
   WIRE_REF: ${{ inputs.wire_ref || github.event.client_payload.wire_ref || 'main' }}
   CORE_REF: ${{ inputs.core_ref || github.event.client_payload.core_ref || 'main' }}
@@ -52,6 +52,8 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           go-version-file: dotvpn-lab/go.mod
+      - name: workspace
+        run: go work init ./dotvpn-lab ./dotvpn-wire ./dotvpn-core ./dotvpn-relay ./dotvpn-client
       - working-directory: dotvpn-lab
         # Userspace suites, any OS. The matrix cells diff against
         # profiles/baseline.json inside suites/matrix; a changed verdict fails.
@@ -86,6 +88,8 @@ jobs:
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
           go-version-file: dotvpn-lab/go.mod
+      - name: workspace
+        run: go work init ./dotvpn-lab ./dotvpn-wire ./dotvpn-core ./dotvpn-relay ./dotvpn-client
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends nftables iproute2 iptables iperf3 tcpdump
       - name: build lab binaries and tests
         working-directory: dotvpn-lab
