@@ -7,7 +7,7 @@ require (
 	github.com/payam-foundation/dotvpn-client v0.1.0
 	github.com/payam-foundation/dotvpn-wire v0.2.0
 	github.com/quic-go/quic-go v0.64.1
-	gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/snowflake/v2 v2.15.2
+	gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/snowflake/v2 v2.15.3
 	golang.org/x/net v0.62.0
 	golang.org/x/sys v0.49.0
 )
