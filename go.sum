@@ -94,6 +94,10 @@ github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
 github.com/patrickmn/go-cache v2.1.0+incompatible h1:HRMgzkcYKYpi3C8ajMPV8OFXaaRUnok+kx1WdO15EQc=
 github.com/patrickmn/go-cache v2.1.0+incompatible/go.mod h1:3Qf8kWWT7OJRJbdiICTKqZju1ZixQ/KpMGzzAfe6+WQ=
+github.com/payam-foundation/dotvpn-client v0.1.0 h1:5NDYQlrcOIG32hkHGaAHRubUfzlT9dmfwUm0AYEN9NM=
+github.com/payam-foundation/dotvpn-client v0.1.0/go.mod h1:oOEVRGrVEsBs1qKV04cR1HH95stcdx4NyG+PlwSjJdg=
+github.com/payam-foundation/dotvpn-wire v0.2.0 h1:dR9nybICBjpwEi+pvQD3/dii8pBg9z1/OSzg+VcaQBM=
+github.com/payam-foundation/dotvpn-wire v0.2.0/go.mod h1:5ucEYWcGyFD7ZrT4FA4As7XnRuD80i9VU9U8xlofMYI=
 github.com/pion/datachannel v1.6.2 h1:7EXQ8TH3vTouBUdRWYbcX2edSx9Yj6k5zl5P+qyxEPc=
 github.com/pion/datachannel v1.6.2/go.mod h1:pzbdAZvyGtXbcHM1hBbsFaOTf40lZizU/dNlvVOak6E=
 github.com/pion/dtls/v3 v3.1.5 h1:9xJtVsHwMYeSjPp5Hh1FTis4DchnQWtnOa5o+6ygqfc=

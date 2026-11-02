@@ -4,7 +4,7 @@ go 1.27.3
 
 require (
 	github.com/florianl/go-nfqueue/v2 v2.1.0
-	github.com/payam-foundation/dotvpn-client v0.0.0
+	github.com/payam-foundation/dotvpn-client v0.1.0
 	github.com/payam-foundation/dotvpn-wire v0.2.0
 	github.com/quic-go/quic-go v0.64.1
 	gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/snowflake/v2 v2.15.2
@@ -83,12 +83,4 @@ require (
 	golang.org/x/text v0.43.0 // indirect
 	golang.org/x/time v0.16.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
-)
-
-// The e2e module tests the repos side by side. Core and relay packages are
-// internal, so they are built and run as the binaries operators run; client
-// and wire are imported as libraries.
-replace (
-	github.com/payam-foundation/dotvpn-client => ../dotvpn-client
-	github.com/payam-foundation/dotvpn-wire => ../dotvpn-wire
 )
