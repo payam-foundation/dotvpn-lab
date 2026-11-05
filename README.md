@@ -1,10 +1,15 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/readme-header-dark.svg">
+  <img alt="Dot VPN" src=".github/readme-header-light.svg">
+</picture>
+
 # dotvpn-lab
 
 [![CI](https://github.com/payam-foundation/dotvpn-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/payam-foundation/dotvpn-lab/actions/workflows/ci.yml)
 [![Status: beta](https://img.shields.io/badge/status-beta-orange)](#status)
 [![License: PolyForm Noncommercial](https://img.shields.io/badge/license-PolyForm%20Noncommercial-blue)](LICENSE)
 
-Black-box integration tests for the whole [dotvpn](https://github.com/payam-foundation/dotvpn-wire#related-repositories) stack, plus a lab that models documented censor behaviour and shows which carriers survive it. It builds the real `dotvpn-core` and `dotvpn-relay`, imports `dotvpn-client` and `dotvpn-wire`, and drives them through simulated middleboxes.
+Black-box integration tests for the whole [Dot VPN](https://github.com/payam-foundation/dotvpn-wire#related-repositories) stack, plus a lab that models documented censor behaviour and shows which carriers survive it. It builds the real `dotvpn-core` and `dotvpn-relay`, imports `dotvpn-client` and `dotvpn-wire`, and drives them through simulated middleboxes.
 
 ## Status
 
@@ -52,7 +57,7 @@ The relay sits on the censored side, so the reverse tunnel crosses the censor to
 
 ## Quick start
 
-All commands run in this repository, with the six dotvpn repositories checked out side by side.
+All commands run in this repository, with the six Dot VPN repositories checked out side by side.
 
 ```sh
 make test                                           # vet and race tests, userspace suites, any OS
